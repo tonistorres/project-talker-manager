@@ -28,6 +28,12 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/books', (req, res) => {
+  // // https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+  // const result = books.slice(0,qty || books.length);
+      res.status(200).send();
+  });
+
 /* Agora vou criar um mine servidor web local em mémoria 
 com o método listen do express ela recebe como parametro
 a porta onde esse servidor. É comum passarmos uma callback
