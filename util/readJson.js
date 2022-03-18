@@ -12,7 +12,7 @@ const readJsonFile = async () => {
     try {
         //  Nesse ponto temos os dados brutos de talker.json,
         // (em um Buffer) 
-        const dataBuffer = await fs.readFile('./talker.json');
+        const dataBuffer = await fs.readFile('./talker.json', 'utf-8');
         // convertendo os dados de Buffer para Json para isso utilizamos 
         // o método JSON.parse
          const dataJson = JSON.parse(dataBuffer);
