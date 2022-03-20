@@ -1,5 +1,5 @@
 const frisby = require('frisby');
-
+/**Requesito 3 */
 const url = 'http://localhost:3000';
 
 describe('3 - Crie o endpoint POST /login', () => {
@@ -19,6 +19,7 @@ describe('3 - Crie o endpoint POST /login', () => {
       });
   });
 
+// Implementado OK Emial
   it('Será validado que não é possível fazer login sem o campo "email"', async () => {
     await frisby
       .post(`${url}/login`, {
@@ -33,7 +34,7 @@ describe('3 - Crie o endpoint POST /login', () => {
         expect(result.message).toBe('O campo "email" é obrigatório');
       });
   });
-
+// implementando ok Email
   it('Será validado que não é fazer login sem um email no formato "email@email.com"', async () => {
     await frisby
       .post(`${url}/login`, {
@@ -52,6 +53,7 @@ describe('3 - Crie o endpoint POST /login', () => {
       });
   });
 
+  // Implementando ok PassWord
   it('Será validado que não é possível fazer login sem o campo "password"', async () => {
     await frisby
       .post(`${url}/login`, {
@@ -67,6 +69,7 @@ describe('3 - Crie o endpoint POST /login', () => {
       });
   });
 
+  // Implementado ok PassWord
   it('Será validado que não é possível fazer login com o campo "password" menor que 6 caracteres', async () => {
     await frisby
       .post(`${url}/login`, {

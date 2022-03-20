@@ -1,7 +1,9 @@
 const express = require('express');
 
-const router = express.Router();
+/* Importando a biblioteca para trabalhar com requisiçẽos pelo corpo 
+da requisição */
 
+const router = express.Router();
 // importando o módulo de leitura do arquivo json talker.json 
 const readFileCustom = require('../util/readJson');
 
@@ -41,18 +43,30 @@ const HTTP_OK_STATUS = 200;
     }    
     });
     
+ /* Para resolução da questão 2 criaremos uma rota async passando como parâmetro do 
+ verbo get o id da função async. Para tratamento de erro utilizando uma estrutura 
+ try catch onde o try hospeda no seu escopo os codigo que serão de fato executado 
+ e o catch captura qualquer erro que possa ocorrer na execução 
+ */   
  router.get('/:id', async (request, response) => {
 try {
+  /* aqui temos o resultado da requisição que vem embutida no parmas 
+  que é um recursos do express que traz várias informaçẽos da requisição 
+  logo em seguida eu desconstruo dessa requisição o id que foi passado 
+  pelo usuário onde farei uma busca pelo paletrando utilizando o id
+  desconstruído e a hof find que me retorna o primeiro objeto encontrado 
+  */
     const { id } = request.params;
     const speakPerson = await readFileCustom();
     const findPerson = speakPerson.find((person) => person.id === +id);
+    // se findPerson igual a false retornaa a resposta embebido no if 
     if (!findPerson) {
         return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
     return response.status(HTTP_OK_STATUS).send(findPerson);
 } catch (error) {
-    return response.status(404).send(error.message);   
+    return response.status(404).send(error.message);       
 }
  });   
 
-    module.exports = router;
+module.exports = router;
