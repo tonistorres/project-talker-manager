@@ -22,5 +22,4 @@ const readJsonFile = async () => {
     }
 };
 
-// readJsonFile();
 module.exports = readJsonFile;

@@ -1,6 +1,6 @@
  const emailValido = require('../util/validationEmail');
 
- const HTTP_STATUS_400 = 400;
+const HTTP_STATUS_400 = 400;
 const HTTP_OK_STATUS = 200;
 
 function authorizedMiddleware(_req, res, next) {
@@ -32,7 +32,8 @@ const validationPassWordMiddleware = (req, res, next) => {
   const { password } = req.body;
   // Será validado que não é possível fazer login com o campo "password" menor que 6 caracteres 
   if (String(password).length < 6) {
-     return res.status(HTTP_STATUS_400).json({ message: 'O "password" deve ter pelo menos 6 caracteres',
+     return res
+     .status(HTTP_STATUS_400).json({ message: 'O "password" deve ter pelo menos 6 caracteres',
     });
   }
   // Será validado que não é possível fazer login sem o campo "password

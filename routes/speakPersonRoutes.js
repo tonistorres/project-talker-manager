@@ -1,4 +1,7 @@
 const express = require('express');
+const { escrevendoConteudoArq } = require('../util/readWrite');
+
+const CAMINHO_DB = './talker.json';
 
 /* Importando a biblioteca para trabalhar com requisiçẽos pelo corpo 
 da requisição */
@@ -69,4 +72,21 @@ try {
 }
  });   
 
-module.exports = router;
+ /* Esse end Point tem  por funcionalidade adicionar um pessoa ao 
+ arquivo talker.json utilizando funções de escrita e leitura do 
+ módulo fs de forma async e fazer as devidas tratativas de erros 
+ que vou utilizar middlewar */ 
+ router.post('/', async (request, response) => {
+  // bloco try catch para tratativa de erro
+  try {
+    // Recebendo o corpo da requisição enviada pelo método POST
+    const recebeCorpoReq = request.body; 
+    // 
+    const adicionando = await escrevendoConteudoArq(CAMINHO_DB, recebeCorpoReq); 
+    return response.status(201).json(adicionando);        
+  } catch (error) {
+    return response.status(404).send(error.message);
+  }   
+ });
+
+ module.exports = router;
