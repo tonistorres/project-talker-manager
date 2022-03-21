@@ -1,5 +1,13 @@
 const express = require('express');
 const { escrevendoConteudoArq } = require('../util/readWrite');
+const {
+   validacaoChavaAut,
+   validacaoNome, 
+   validaIdade,
+   validaPalestra,
+   validaDataFormatoBrasil,
+   validaAvaliacao,
+  } = require('../middlewares/validationsCreateTalker');
 
 const CAMINHO_DB = './talker.json';
 
@@ -76,7 +84,13 @@ try {
  arquivo talker.json utilizando funções de escrita e leitura do 
  módulo fs de forma async e fazer as devidas tratativas de erros 
  que vou utilizar middlewar */ 
- router.post('/', async (request, response) => {
+ router.post('/',
+  validacaoChavaAut, 
+  validacaoNome, 
+  validaIdade,
+  validaPalestra,
+  validaDataFormatoBrasil,
+  validaAvaliacao, async (request, response) => {
   // bloco try catch para tratativa de erro
   try {
     // Recebendo o corpo da requisição enviada pelo método POST
