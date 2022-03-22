@@ -153,7 +153,7 @@ const validaAvalicao = (request, response, next) => {
     const { talk: { rate } } = request.body;
    if (rate < 1 || rate > 5) {
       return response
-      .status(400)
+      .status(HTTP_STATUS_400)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
    }  
 

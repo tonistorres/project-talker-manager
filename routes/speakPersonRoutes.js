@@ -9,6 +9,8 @@ const {
    validaAvalicao,
    
   } = require('../middlewares/validations');
+ 
+  const { deletaRegistro } = require('../util/deleteFs');
 
   const { editarConteudoArq } = require('../util/editFS');
 
@@ -26,8 +28,10 @@ const readFileCustom = require('../util/readJson');
 // facilidade de manutenção  modificamos em um único local
 // da aplicação e todos demais locais recebem essa alteração 
 // automagicamente
-const HTTP_OK_STATUS = 200;
-
+const HTTP_OK_STATUS_200 = 200;
+const HTTP_OK_STATUS_201 = 201;
+const HTTP_OK_STATUS_204 = 204;
+const HTTP_OK_STATUS_404 = 404;
 /** Para resolução do primeiro problema iremos criar uma rota Assincrona
  * daí o uso da particula asyn antes de (request, response) para o tratamento
  * de errro estou utilizando o bloco try catch onde se der tudo ok a execução 
@@ -48,12 +52,12 @@ const HTTP_OK_STATUS = 200;
       const speakPerson = await readFileCustom();  
   
       if (speakPerson) {
-        return response.status(HTTP_OK_STATUS).send(speakPerson);  
+        return response.status(HTTP_OK_STATUS_200).send(speakPerson);  
       }
       
-    return response.status(HTTP_OK_STATUS).send([]);  
+    return response.status(HTTP_OK_STATUS_200).send([]);  
     } catch (error) {
-      return response.status(404).send(error.message);
+      return response.status(HTTP_OK_STATUS_404).send(error.message);
     }    
     });
     
@@ -73,13 +77,13 @@ try {
     const { id } = request.params;
     const speakPerson = await readFileCustom();
     const findPerson = speakPerson.find((person) => person.id === +id);
-    // se findPerson igual a false retornaa a resposta embebido no if 
     if (!findPerson) {
-        return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+        return response
+        .status(HTTP_OK_STATUS_404).json({ message: 'Pessoa palestrante não encontrada' });
     }
-    return response.status(HTTP_OK_STATUS).send(findPerson);
+    return response.status(HTTP_OK_STATUS_200).send(findPerson);
 } catch (error) {
-    return response.status(404).send(error.message);       
+    return response.status(HTTP_OK_STATUS_404).send(error.message);       
 }
  });   
 
@@ -100,9 +104,9 @@ try {
     const recebeCorpoReq = request.body; 
     // 
     const adicionando = await escrevendoConteudoArq(CAMINHO_DB, recebeCorpoReq); 
-    return response.status(201).json(adicionando);        
+    return response.status(HTTP_OK_STATUS_201).json(adicionando);        
   } catch (error) {
-    return response.status(404).send(error.message);
+    return response.status(HTTP_OK_STATUS_404).send(error.message);
   }   
  });
 
@@ -118,7 +122,13 @@ validaAvalicao,
  async (request, response) => {
 const palestrantesEdicao = await editarConteudoArq(request, response);
 // retornando os palestrantes editados em formato json
-return response.status(200).json(palestrantesEdicao);
+return response.status(HTTP_OK_STATUS_200).json(palestrantesEdicao);
+ });
+
+ // deletando um plestrante da lista 
+ router.delete('/:id', validacaoChavaAut, async (request, response) => {
+  await deletaRegistro(request);
+  response.status(HTTP_OK_STATUS_204).end();
  });
 
  module.exports = router;
