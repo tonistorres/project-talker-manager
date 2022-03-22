@@ -6,10 +6,13 @@ const {
    validaIdade,
    validaPalestra,
    validaDataFormatoBrasil,
-   validaAvaliacao,
-  } = require('../middlewares/validationsCreateTalker');
+   validaAvalicao,
+   
+  } = require('../middlewares/validations');
 
-const CAMINHO_DB = './talker.json';
+  const { editarConteudoArq } = require('../util/editFS');
+
+ const CAMINHO_DB = './talker.json';
 
 /* Importando a biblioteca para trabalhar com requisiçẽos pelo corpo 
 da requisição */
@@ -90,7 +93,7 @@ try {
   validaIdade,
   validaPalestra,
   validaDataFormatoBrasil,
-  validaAvaliacao, async (request, response) => {
+  validaAvalicao, async (request, response) => {
   // bloco try catch para tratativa de erro
   try {
     // Recebendo o corpo da requisição enviada pelo método POST
@@ -101,6 +104,21 @@ try {
   } catch (error) {
     return response.status(404).send(error.message);
   }   
+ });
+
+ // O endpoint deve ser capaz de editar uma pessoa palestrante com base
+ // no id da rota, sem alterar o id registrado.
+router.put('/:id',
+validacaoChavaAut, 
+validacaoNome, 
+validaIdade,
+validaPalestra,
+validaDataFormatoBrasil,
+validaAvalicao,
+ async (request, response) => {
+const palestrantesEdicao = await editarConteudoArq(request, response);
+// retornando os palestrantes editados em formato json
+return response.status(200).json(palestrantesEdicao);
  });
 
  module.exports = router;

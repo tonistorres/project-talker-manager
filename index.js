@@ -3,8 +3,10 @@
 */
 const express = require('express');
 const bodyParser = require('body-parser');
-const { validationEmailMiddleware,
-  validationPassWordMiddleware } = require('./middlewares/validationLogin');
+const { 
+  validationEmailMiddleware,
+  validationPassWordMiddleware,
+ } = require('./middlewares/validations');
 
 /* Importando a biblioteca para trabalhar com requisiçẽos pelo corpo 
 da requisição */

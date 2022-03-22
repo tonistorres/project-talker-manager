@@ -1,6 +1,61 @@
+const emailValido = require('../util/validationEmail');
+
 // criando constantes de erros 
+const HTTP_OK_STATUS = 200;
 const HTTP_STATUS_400 = 400;
 const HTTP_STATUS_401 = 401;
+
+// ************************ */
+// INICIO END-POINTS INDEX
+// ************************ /
+function authorizedMiddleware(_req, res, next) {
+    res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' }); 
+    next();   
+  }
+  
+  const validationEmailMiddleware = (req, res, next) => {
+    const { email } = req.body;
+  console.log(email);
+  // Será validado que não é possível fazer login sem o campo "email
+  if (email === undefined) {
+  return res.status(HTTP_STATUS_400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  
+  // Será validado que não é fazer login sem um email no formato "email@email.com"
+  const checandoSeEmailValido = emailValido(email);
+  if (!checandoSeEmailValido) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  
+  if (String(email).length <= 0) {
+       return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+     next();
+  };
+  
+  const validationPassWordMiddleware = (req, res, next) => {
+    const { password } = req.body;
+    // Será validado que não é possível fazer login com o campo "password" menor que 6 caracteres 
+    if (String(password).length < 6) {
+       return res
+       .status(HTTP_STATUS_400).json({ message: 'O "password" deve ter pelo menos 6 caracteres',
+      });
+    }
+    // Será validado que não é possível fazer login sem o campo "password
+    if (password === '' || !password || password === undefined) {
+        return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+     }
+  
+     next();
+  };
+
+// ************************ */
+// FIM END-POINTS INDEX
+// ************************ /
+
+// ************************************/
+// INICIO END-POINTS SPEAKPERSONROUTES
+// *********************************** /
 
 /** Criando o middlewar valida a requisicao (token)  */
 const validacaoChavaAut = (request, response, next) => {
@@ -35,7 +90,7 @@ const validacaoNome = (request, response, next) => {
         return response.status(HTTP_STATUS_400).json({ message: 'O campo "name" é obrigatório' });
     }
    // se o comprimento do name for menor que 4 será tratado com uma resposta de erro   
-    if (name.length < 4) {
+    if (name.length < 3) {
         return response
         .status(HTTP_STATUS_400)
         .json({ message: 'O "name" deve ter pelo menos 3 caracteres' }); 
@@ -66,7 +121,7 @@ const validaPalestra = (request, response, next) => {
     // dados injetados em body e descontruído a propriedade talk para trabalhar tratativas de erro
     const { talk } = request.body;
 // se não houver algumas das chaves passada como parametro em if fazer a tratativa de erro 
-    if (!talk || !talk.watchedAt || !talk.rate) {
+    if (!talk || !talk.watchedAt) {
         return response
         .status(HTTP_STATUS_400)
         .json(
@@ -93,31 +148,37 @@ const validaDataFormatoBrasil = (request, response, next) => {
 
     next();
 };
-// A chave rate deve ser um inteiro de 1 à 5.
-const validaAvaliacao = (request, response, next) => {
-    // dados injetados em body e descontruído a propriedade rate para trabalhar tratativas de erro
+
+const validaAvalicao = (request, response, next) => {
     const { talk: { rate } } = request.body;
-    // se rate for diferente de inteiro execute tratativa de erro 
-    if (!Number.isInteger(rate)) {
-        return response
-        .status(HTTP_STATUS_400)
-        .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
-    }
-// se rate for menor que 1 ou rate maior que 5 tratativa de erro 
-    if (rate < 1 || rate > 5) {
-        return response
-        .status(HTTP_STATUS_400)
-        .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
+   if (rate < 1 || rate > 5) {
+      return response
+      .status(400)
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
+   }  
+
+   if (!rate) {
+    return response
+    .status(HTTP_STATUS_400)
+    .json(
+        { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+        );
     }
     next();
 };
 
+// ************************************/
+// FIM END-POINTS SPEAKPERSONROUTES
+// *********************************** /
+
 module.exports = {
+  authorizedMiddleware,  
+  validationEmailMiddleware,
+  validationPassWordMiddleware,  
   validacaoChavaAut,
   validacaoNome,
   validaIdade,
   validaPalestra,
   validaDataFormatoBrasil,
-  validaAvaliacao,
-
+  validaAvalicao,
 };
