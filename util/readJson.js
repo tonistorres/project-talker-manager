@@ -10,4 +10,4 @@ const readJsonFile = async () => {
     }
 };
 
-module.exports = readJsonFile;
+module.exports = { readJsonFile };

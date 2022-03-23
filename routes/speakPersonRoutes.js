@@ -1,4 +1,5 @@
 const express = require('express');
+const { readJsonFile } = require('../util/readJson');
 
 const { escrevendoConteudoArq } = require('../util/readWrite');
 
@@ -15,6 +16,8 @@ const {
 const { deletaRegistro } = require('../util/deleteFs');
 
 const { tratandoObeto } = require('../util/editFS');
+
+const { buscandoPorNome } = require('../util/searchFs');
 
 const CAMINHO_DB = './talker.json';
 
@@ -37,8 +40,15 @@ const HTTP_OK_STATUS_404 = 404;
     } catch (error) {
       return response.status(HTTP_OK_STATUS_404).send(error.message);
     }    
-    });
-    
+ });
+
+ router.get('/search', validacaoChavaAut, async (request, response) => {
+   const name = request.query.q;
+   const dbTalkerObJs = await readJsonFile();
+   const dbFiltradoPorNome = dbTalkerObJs.filter((item) => item.name.includes(name));  
+   response.status(200).json(dbFiltradoPorNome); 
+});
+
 router.get('/:id', async (request, response) => {
 try {
     const { id } = request.params;

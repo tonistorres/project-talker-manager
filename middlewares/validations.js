@@ -15,8 +15,7 @@ function authorizedMiddleware(_req, res, next) {
   
   const validationEmailMiddleware = (req, res, next) => {
     const { email } = req.body;
-  console.log(email);
-  // Será validado que não é possível fazer login sem o campo "email
+    // Será validado que não é possível fazer login sem o campo "email
   if (email === undefined) {
   return res.status(HTTP_STATUS_400).json({ message: 'O campo "email" é obrigatório' });
   }
