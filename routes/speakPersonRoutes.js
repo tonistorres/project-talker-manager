@@ -12,7 +12,7 @@ const {
  
   const { deletaRegistro } = require('../util/deleteFs');
 
-  const { editarConteudoArq } = require('../util/editFS');
+  const { tratandoObeto } = require('../util/editFS');
 
  const CAMINHO_DB = './talker.json';
 
@@ -120,15 +120,17 @@ validaPalestra,
 validaDataFormatoBrasil,
 validaAvalicao,
  async (request, response) => {
-const palestrantesEdicao = await editarConteudoArq(request, response);
+// const palestrantesEdicao = await editarConteudoArq(request, response);
+const listaTratada = await tratandoObeto(request, response);
+console.log(listaTratada);
 // retornando os palestrantes editados em formato json
-return response.status(HTTP_OK_STATUS_200).json(palestrantesEdicao);
+return response.status(HTTP_OK_STATUS_200).json(listaTratada);
  });
 
  // deletando um plestrante da lista 
  router.delete('/:id', validacaoChavaAut, async (request, response) => {
   await deletaRegistro(request);
-  response.status(HTTP_OK_STATUS_204).end();
+    response.status(HTTP_OK_STATUS_204).end();
  });
 
  module.exports = router;
