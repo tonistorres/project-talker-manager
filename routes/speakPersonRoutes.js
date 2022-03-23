@@ -1,5 +1,7 @@
 const express = require('express');
+
 const { escrevendoConteudoArq } = require('../util/readWrite');
+
 const {
    validacaoChavaAut,
    validacaoNome, 
@@ -9,12 +11,12 @@ const {
    validaAvalicao,
    
   } = require('../middlewares/validations');
- 
-  const { deletaRegistro } = require('../util/deleteFs');
 
-  const { tratandoObeto } = require('../util/editFS');
+const { deletaRegistro } = require('../util/deleteFs');
 
- const CAMINHO_DB = './talker.json';
+const { tratandoObeto } = require('../util/editFS');
+
+const CAMINHO_DB = './talker.json';
 
 /* Importando a biblioteca para trabalhar com requisiçẽos pelo corpo 
 da requisição */
@@ -122,7 +124,6 @@ validaAvalicao,
  async (request, response) => {
 // const palestrantesEdicao = await editarConteudoArq(request, response);
 const listaTratada = await tratandoObeto(request, response);
-console.log(listaTratada);
 // retornando os palestrantes editados em formato json
 return response.status(HTTP_OK_STATUS_200).json(listaTratada);
  });
@@ -130,7 +131,7 @@ return response.status(HTTP_OK_STATUS_200).json(listaTratada);
  // deletando um plestrante da lista 
  router.delete('/:id', validacaoChavaAut, async (request, response) => {
   await deletaRegistro(request);
-    response.status(HTTP_OK_STATUS_204).end();
+  return response.status(HTTP_OK_STATUS_204).end();
  });
 
  module.exports = router;
