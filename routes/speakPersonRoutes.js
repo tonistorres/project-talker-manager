@@ -17,13 +17,9 @@ const { deletaRegistro } = require('../util/deleteFs');
 
 const { tratandoObeto } = require('../util/editFS');
 
-const { buscandoPorNome } = require('../util/searchFs');
-
 const CAMINHO_DB = './talker.json';
 
 const router = express.Router();
-
-const readFileCustom = require('../util/readJson');
 
 const HTTP_OK_STATUS_200 = 200;
 const HTTP_OK_STATUS_201 = 201;
@@ -32,7 +28,7 @@ const HTTP_OK_STATUS_404 = 404;
 
  router.get('/', async (request, response) => {
     try {
-      const speakPerson = await readFileCustom();  
+      const speakPerson = await readJsonFile();  
       if (speakPerson) {
         return response.status(HTTP_OK_STATUS_200).send(speakPerson);  
       }
@@ -52,7 +48,7 @@ const HTTP_OK_STATUS_404 = 404;
 router.get('/:id', async (request, response) => {
 try {
     const { id } = request.params;
-    const speakPerson = await readFileCustom();
+    const speakPerson = await readJsonFile();
     const findPerson = speakPerson.find((person) => person.id === +id);
     if (!findPerson) {
         return response
